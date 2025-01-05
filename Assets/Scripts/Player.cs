@@ -5,46 +5,38 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    Rigidbody _rb; // ÇÃ·¹ÀÌ¾îÀÇ Rigidbody ÄÄÆ÷³ÍÆ®
+    Rigidbody _rb; // í”Œë ˆì´ì–´ì˜ Rigidbody ì»´í¬ë„ŒíŠ¸
 
-    [Header("ÇÃ·¹ÀÌ¾î ¿òÁ÷ÀÓ")]
-    [SerializeField] float _moveSpeed = 3f; // ±âº» ÀÌµ¿ ¼Óµµ
-    [SerializeField] float _rotateSpeed = 300f; // È¸Àü ¼Óµµ
-    [SerializeField] float _jumpForce = 10; // Á¡ÇÁ ½Ã Àû¿ëµÇ´Â Èû
-    [SerializeField] float _mouseSensitivity = 1f; // ¸¶¿ì½º ¹Î°¨µµ
-    float _run; // ´Ş¸®±â ¼Óµµ
+    [Header("í”Œë ˆì´ì–´ ì›€ì§ì„")]
+    [SerializeField] float _moveSpeed = 3f; // ê¸°ë³¸ ì´ë™ ì†ë„
+    [SerializeField] float _rotateSpeed = 300f; // íšŒì „ ì†ë„
+    [SerializeField] float _jumpForce = 10; // ì í”„ ì‹œ ì ìš©ë˜ëŠ” í˜
+    [SerializeField] float _mouseSensitivity = 1f; // ë§ˆìš°ìŠ¤ ë¯¼ê°ë„
+    float _run; // ë‹¬ë¦¬ê¸° ì†ë„
 
-    [Header("ÇÃ·¹ÀÌ¾î Ä«¸Ş¶ó")]
-    [SerializeField] Vector3 _offset; // Ä«¸Ş¶ó¿Í ÇÃ·¹ÀÌ¾î °£ °Å¸® ¿ÀÇÁ¼Â
-    [SerializeField] float _yRotationRange = 60f; // Ä«¸Ş¶óÀÇ »óÇÏ È¸Àü Á¦ÇÑ °¢µµ
-    [SerializeField] Camera _mainCamera; // ÇÃ·¹ÀÌ¾îÀÇ ¸ŞÀÎ Ä«¸Ş¶ó
-    [SerializeField] Transform _cameraPoint; // Ä«¸Ş¶ó°¡ µû¶ó°¥ Æ÷ÀÎÆ®
-    [SerializeField] bool _isJumped; // ÇÃ·¹ÀÌ¾î°¡ Á¡ÇÁ ÁßÀÎÁö È®ÀÎÇÏ´Â º¯¼ö
-    [SerializeField] float _yRotation = 0f; // Ä«¸Ş¶óÀÇ ÇöÀç »óÇÏ È¸Àü °¢µµ
+    [Header("í”Œë ˆì´ì–´ ì¹´ë©”ë¼")]
+    [SerializeField] Vector3 _offset; // ì¹´ë©”ë¼ì™€ í”Œë ˆì´ì–´ ê°„ ê±°ë¦¬ ì˜¤í”„ì…‹
+    [SerializeField] float _yRotationRange = 60f; // ì¹´ë©”ë¼ì˜ ìƒí•˜ íšŒì „ ì œí•œ ê°ë„
+    [SerializeField] Camera _mainCamera; // í”Œë ˆì´ì–´ì˜ ë©”ì¸ ì¹´ë©”ë¼
+    [SerializeField] bool _isJumped; // í”Œë ˆì´ì–´ê°€ ì í”„ ì¤‘ì¸ì§€ í™•ì¸í•˜ëŠ” ë³€ìˆ˜
+    [SerializeField] float _yRotation = 0f; // ì¹´ë©”ë¼ì˜ í˜„ì¬ ìƒí•˜ íšŒì „ ê°ë„
     
     private void Start()
     {
         _rb = gameObject.GetComponent<Rigidbody>();
 
-        _isJumped = false; // ÃÊ±â Á¡ÇÁ »óÅÂ ¼³Á¤
+        _isJumped = false; // ì´ˆê¸° ì í”„ ìƒíƒœ ì„¤ì •
 
-        _run = _moveSpeed * 2; // ´Ş¸®±â ¼Óµµ¸¦ ±âº» ÀÌµ¿ ¼ÓµµÀÇ µÎ ¹è·Î ¼³Á¤
-
-        // Ä«¸Ş¶ó ¼³Á¤
-        _mainCamera.transform.SetParent(gameObject.transform); // Ä«¸Ş¶ó¸¦ ÇÃ·¹ÀÌ¾îÀÇ ÀÚ½ÄÀ¸·Î ¼³Á¤
-        _mainCamera.transform.position = gameObject.transform.position + _offset; // Ä«¸Ş¶ó À§Ä¡¸¦ ÃÊ±âÈ­
-
-        CameraController cam = _mainCamera.GetComponent<CameraController>();
-        cam.FollowTarget = _cameraPoint; // Ä«¸Ş¶ó°¡ cameraPoint¸¦ µû¶ó°¡µµ·Ï ¼³Á¤
-
-        // Ä¿¼­ ¼û±â±â ¹× Àá±İ
+        _run = _moveSpeed * 2; // ë‹¬ë¦¬ê¸° ì†ë„ë¥¼ ê¸°ë³¸ ì´ë™ ì†ë„ì˜ ë‘ ë°°ë¡œ ì„¤ì •
+        
+        // ì»¤ì„œ ìˆ¨ê¸°ê¸° ë° ì ê¸ˆ
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
-        // ¿ŞÂÊ Shift Å°¸¦ ´­·¯ ´Ş¸®±â, ¶¼¸é ±âº» ¼Óµµ·Î º¹±¸
+        // ì™¼ìª½ Shift í‚¤ë¥¼ ëˆŒëŸ¬ ë‹¬ë¦¬ê¸°, ë–¼ë©´ ê¸°ë³¸ ì†ë„ë¡œ ë³µêµ¬
         if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.LeftShift))
         {
             _moveSpeed = Input.GetKey(KeyCode.LeftShift) ? _run : _run / 2;
@@ -67,8 +59,8 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && !_isJumped)
         {
-            _isJumped = true; // Á¡ÇÁ »óÅÂ·Î º¯°æ
-            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse); // À§·Î ÈûÀ» °¡ÇØ Á¡ÇÁ
+            _isJumped = true; // ì í”„ ìƒíƒœë¡œ ë³€ê²½
+            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse); // ìœ„ë¡œ í˜ì„ ê°€í•´ ì í”„
         }
     }
 
@@ -82,41 +74,41 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        // ¸¶¿ì½º ÀÔ·Â°ª °¡Á®¿À±â
+        // ë§ˆìš°ìŠ¤ ì…ë ¥ê°’ ê°€ì ¸ì˜¤ê¸°
         Vector2 rotateInput = new(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        SetRotation(rotateInput); // ÇÃ·¹ÀÌ¾î¿Í Ä«¸Ş¶ó È¸Àü Ã³¸®
+        SetRotation(rotateInput); // í”Œë ˆì´ì–´ì™€ ì¹´ë©”ë¼ íšŒì „ ì²˜ë¦¬
 
-        // Å°º¸µå ÀÔ·Â°ª °¡Á®¿À±â
+        // í‚¤ë³´ë“œ ì…ë ¥ê°’ ê°€ì ¸ì˜¤ê¸°
         Vector3 moveInput = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        SetPosition(moveInput); // ÇÃ·¹ÀÌ¾î ÀÌµ¿ Ã³¸®
+        SetPosition(moveInput); // í”Œë ˆì´ì–´ ì´ë™ ì²˜ë¦¬
     }
 
     private void SetRotation(Vector2 input)
     {
-        // ¸¶¿ì½º X ÀÔ·ÂÀ¸·Î ÇÃ·¹ÀÌ¾î ÁÂ¿ì È¸Àü
+        // ë§ˆìš°ìŠ¤ X ì…ë ¥ìœ¼ë¡œ í”Œë ˆì´ì–´ ì¢Œìš° íšŒì „
         if (input.x != 0)
         {
             transform.Rotate(Vector3.up, input.x * _rotateSpeed * _mouseSensitivity * Time.deltaTime);
         }
 
-        // ¸¶¿ì½º Y ÀÔ·ÂÀ¸·Î Ä«¸Ş¶ó »óÇÏ È¸Àü
+        // ë§ˆìš°ìŠ¤ Y ì…ë ¥ìœ¼ë¡œ ì¹´ë©”ë¼ ìƒí•˜ íšŒì „
         if (input.y != 0)
         {
-            _yRotation = _yRotation + -input.y * _rotateSpeed * _mouseSensitivity * Time.deltaTime; // »óÇÏ È¸Àü °è»ê
-            _yRotation = Mathf.Clamp(_yRotation, -_yRotationRange, _yRotationRange); // È¸Àü °¢µµ¸¦ Á¦ÇÑ
+            _yRotation = _yRotation + -input.y * _rotateSpeed * _mouseSensitivity * Time.deltaTime; // ìƒí•˜ íšŒì „ ê³„ì‚°
+            _yRotation = Mathf.Clamp(_yRotation, -_yRotationRange, _yRotationRange); // íšŒì „ ê°ë„ë¥¼ ì œí•œ
 
-            _mainCamera.transform.localRotation = Quaternion.Euler(_yRotation, 0f, 0f); // Ä«¸Ş¶ó È¸Àü Àû¿ë
+            _mainCamera.transform.localRotation = Quaternion.Euler(_yRotation, 0f, 0f); // ì¹´ë©”ë¼ íšŒì „ ì ìš©
         }
     }
 
     private void SetPosition(Vector3 input)
     {
-        // ÀÔ·Â°ªÀ¸·Î ÀÌµ¿ ¹æÇâ °è»ê
+        // ì…ë ¥ê°’ìœ¼ë¡œ ì´ë™ ë°©í–¥ ê³„ì‚°
         Vector3 moveDirection = transform.forward * input.z + transform.right * input.x;
-        moveDirection.Normalize(); // ¹æÇâ º¤ÅÍ Á¤±ÔÈ­
-        Vector3 velocity = moveDirection * _moveSpeed; // ÀÌµ¿ ¼Óµµ °è»ê
+        moveDirection.Normalize(); // ë°©í–¥ ë²¡í„° ì •ê·œí™”
+        Vector3 velocity = moveDirection * _moveSpeed; // ì´ë™ ì†ë„ ê³„ì‚°
 
-        // ºÎµå·¯¿î ÀÌµ¿À» À§ÇØ ¼Óµµ º¸°£ Ã³¸®
+        // ë¶€ë“œëŸ¬ìš´ ì´ë™ì„ ìœ„í•´ ì†ë„ ë³´ê°„ ì²˜ë¦¬
         _rb.velocity = Vector3.Lerp(_rb.velocity, new Vector3(velocity.x, _rb.velocity.y, velocity.z), 0.1f);
     }
 }
